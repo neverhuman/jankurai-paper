@@ -1,0 +1,26 @@
+# Code owners for jankurai-paper. Mirrors agent/owner-map.json so GitHub review
+# routing and the machine-readable owner map stay consistent.
+
+# Default owner for everything not matched below.
+*                       @neverhuman
+
+# Paper manuscript, data, figures, and bibliography.
+/paper/                 @neverhuman
+/assets/                @neverhuman
+/tips/                  @neverhuman
+
+# Repo control surface.
+/agent/                 @neverhuman
+/docs/                  @neverhuman
+/ops/                   @neverhuman
+/scripts/               @neverhuman
+/tools/                 @neverhuman
+/schemas/               @neverhuman
+/contracts/             @neverhuman
+/.github/               @neverhuman
+
+# Release and family metadata.
+/VERSION                @neverhuman
+/CHANGELOG.md           @neverhuman
+/SPLIT.md               @neverhuman
+/Justfile               @neverhuman

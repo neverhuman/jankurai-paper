@@ -1,6 +1,46 @@
 {
   "workspace": "jankurai-paper",
   "tests": {
+    "paper/": {
+      "command": "latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=paper paper/jankurai.tex",
+      "purpose": "build the canonical TeX manuscript and prove the paper compiles"
+    },
+    "assets/": {
+      "command": "bash scripts/ci-local.sh required",
+      "purpose": "verify paper figures, headers, and rendered assets stay present"
+    },
+    "docs/": {
+      "command": "bash scripts/ci-local.sh audit",
+      "purpose": "verify agent-readable documentation stays present and audited"
+    },
+    "tips/": {
+      "command": "bash scripts/ci-local.sh audit",
+      "purpose": "verify the tips teaching corpus stays present"
+    },
+    "Justfile": {
+      "command": "bash scripts/ci-local.sh fast",
+      "purpose": "verify the root command surface lanes are runnable"
+    },
+    ".latexmkrc": {
+      "command": "bash scripts/ci-local.sh required",
+      "purpose": "verify the latexmk build configuration stays coherent"
+    },
+    "VERSION": {
+      "command": "bash scripts/ci-local.sh audit",
+      "purpose": "verify the declared version stays coherent with release metadata"
+    },
+    "CHANGELOG.md": {
+      "command": "bash scripts/ci-local.sh audit",
+      "purpose": "verify the changelog tracks released versions"
+    },
+    "README.md": {
+      "command": "bash scripts/ci-local.sh audit",
+      "purpose": "verify the root readme routes to the workspace layout"
+    },
+    "LICENSE": {
+      "command": "bash scripts/ci-local.sh required",
+      "purpose": "verify the license file is present and unmodified"
+    },
     "AGENTS.md": {
       "command": "bash scripts/ci-local.sh required",
       "purpose": "verify split-family agent routing remains present"
@@ -9,13 +49,29 @@
       "command": "bash scripts/ci-local.sh required",
       "purpose": "verify split metadata stays coherent"
     },
+    ".gitignore": {
+      "command": "bash scripts/ci-local.sh required",
+      "purpose": "verify the exclusion list keeps transient build paths untracked"
+    },
     ".jeryu/": {
       "command": "bash scripts/ci-local.sh required",
       "purpose": "verify local Jeryu and GitHub mirror metadata"
     },
     "agent/": {
-      "command": "bash scripts/ci-local.sh required",
+      "command": "bash scripts/ci-local.sh audit",
       "purpose": "verify split control maps and standard metadata"
+    },
+    "schemas/": {
+      "command": "bash scripts/ci-local.sh audit",
+      "purpose": "verify the paper data JSON Schema contracts stay present and valid"
+    },
+    "contracts/": {
+      "command": "bash scripts/ci-local.sh audit",
+      "purpose": "verify the paper data contracts and their generated-zone drift checks"
+    },
+    ".github/": {
+      "command": "bash scripts/ci-local.sh required",
+      "purpose": "verify CI workflow entrypoints stay pinned and thin"
     },
     "ops/": {
       "command": "bash scripts/ci-local.sh required",
@@ -23,10 +79,14 @@
     },
     "scripts/": {
       "command": "bash scripts/ci-local.sh required",
-      "purpose": "verify local CI and fusion helpers"
+      "purpose": "verify local CI helpers"
+    },
+    "tools/": {
+      "command": "bash scripts/ci-local.sh security",
+      "purpose": "verify the operational security lane entrypoint runs"
     },
     ".": {
-      "command": "bash scripts/ci-local.sh required",
+      "command": "bash scripts/ci-local.sh audit",
       "purpose": "required local proof for jankurai-paper"
     }
   }

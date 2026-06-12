@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jankurai.dev/paper/schemas/public-repo-scores.schema.json",
+  "title": "Public repository score dataset",
+  "description": "Contract for the paper data files under paper/data/public-repo-scores-*.json. These are the source of truth for the generated TeX tables in paper/tex/generated/public_repo_score_tables.tex. Hand-edits to the generated tables are forbidden; edit the data and regenerate.",
+  "type": "object",
+  "required": ["source_artifact", "generated_at", "repo_count", "rows"],
+  "additionalProperties": true,
+  "properties": {
+    "source_artifact": { "type": "string", "minLength": 1 },
+    "source_group_note": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "jankurai_version": { "type": "string" },
+    "repo_count": { "type": "integer", "minimum": 0 },
+    "successful": { "type": "integer", "minimum": 0 },
+    "failed": { "type": "integer", "minimum": 0 },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repo", "score"],
+        "additionalProperties": true,
+        "properties": {
+          "star_rank": { "type": "integer", "minimum": 1 },
+          "repo": { "type": "string", "minLength": 1 },
+          "stars": { "type": "string" },
+          "source_group": { "type": "string" },
+          "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "issues": { "type": "integer", "minimum": 0 },
+          "hard_findings": { "type": "integer", "minimum": 0 },
+          "soft_findings": { "type": "integer", "minimum": 0 },
+          "severity": { "type": "object" }
+        }
+      }
+    }
+  }
+}

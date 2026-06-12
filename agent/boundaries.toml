@@ -1,0 +1,40 @@
+# Boundary manifest for jankurai-paper.
+# This is the paper arm of the split family: a LaTeX manuscript, its data, and
+# its build lane. No Rust/web/database/Python product surface is committed here,
+# so only the stack identity and the documented exceptions apply.
+# See docs/boundaries.md for prose.
+
+[stack]
+id = "rust-ts-vite-react-postgres-bounded-python"
+version = "0.5.0"
+
+# Contract surface for the paper arm. The committed paper data JSON files are the
+# source-of-truth contract; the generated TeX tables are their typed output.
+# The JSON Schema under schemas/ pins the data contract shape. Generated tables
+# are never hand-edited; they are regenerated from the data sources.
+[contracts]
+contract_paths = ["contracts", "contracts/json-schema", "paper/data", "schemas"]
+generated_contract_paths = ["paper/tex/generated"]
+event_contract_paths = ["contracts/json-schema"]
+generated_type_paths = ["paper/tex/generated"]
+client_markers = ["paper/tex/generated/public_repo_score_tables.tex"]
+drift_command = "jankurai audit . --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md"
+
+# Agent-friendly exception pattern. Every exception is a dated, owned, expiring
+# waiver for a specific runtime/path. See docs/exceptions.md for the full
+# request and review process.
+[[streaming_exception]]
+runtime = "latex-generated-tables"
+classification = "vendor"
+reason = "Generated TeX tables under paper/tex/generated are build output regenerated from paper/data sources; they are tracked as a dated waiver rather than hand-authored source."
+owner = "paper"
+expires = "2026-12-31"
+migration_path = "Regenerate the tables via the documented jankurai paper commands in paper/README.md; never hand-edit. Remove this exception only if the tables become hand-authored source."
+
+[[streaming_exception]]
+runtime = "tips-teaching-corpus"
+classification = "corpus"
+reason = "tips/ is teaching material distilled from the paper, not product source, so it is excluded from product scans."
+owner = "paper"
+expires = "2026-12-31"
+migration_path = "Keep tips/ excluded via agent/audit-policy.toml [scan].excluded_paths; remove this exception only if tips/ becomes scanned product source."

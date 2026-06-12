@@ -1,0 +1,67 @@
+schema_version = "1.0.0"
+
+# Tools this paper repo adopts in CI. The paper arm has no product code, so the
+# adopted set is the jankurai audit/score gate (which subsumes proof-routing,
+# contract-drift, authz-matrix, agent-tool-supply, release-readiness, and
+# cost-budget), changed-surface proof routing, and the secret scanner.
+# Coverage/proofmark/db/ux tools apply only to product members.
+#
+# The language bad-behavior catalog tests (ci-/git-/release-bad-behavior) are
+# Rust integration tests (`cargo test -p jankurai --test language_bad_behavior`)
+# that scan authored source code for dangerous patterns. This is a LaTeX paper
+# repo with no Rust crate, CI scripting, or release automation to scan, so those
+# language tests are not applicable here and are disabled rather than left as
+# advisory obligations the paper arm structurally cannot satisfy. They run in the
+# product/code members that actually own that source surface.
+
+[[tools]]
+id = "audit-ci"
+mode = "auto"
+
+[[tools]]
+id = "proof-routing"
+mode = "auto"
+
+[[tools]]
+id = "proofbind"
+mode = "auto"
+
+[[tools]]
+id = "contract-drift"
+mode = "auto"
+
+[[tools]]
+id = "authz-matrix"
+mode = "auto"
+
+[[tools]]
+id = "agent-tool-supply"
+mode = "auto"
+
+[[tools]]
+id = "release-readiness"
+mode = "auto"
+
+[[tools]]
+id = "cost-budget"
+mode = "auto"
+
+[[tools]]
+id = "vibe-coverage"
+mode = "auto"
+
+[[tools]]
+id = "security"
+mode = "auto"
+
+[[tools]]
+id = "ci-bad-behavior"
+mode = "disabled"
+
+[[tools]]
+id = "git-bad-behavior"
+mode = "disabled"
+
+[[tools]]
+id = "release-bad-behavior"
+mode = "disabled"
