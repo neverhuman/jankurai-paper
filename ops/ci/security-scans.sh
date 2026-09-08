@@ -12,8 +12,10 @@ scan() {
     | sed 's/^/jankurai-security-step=/'
   return "$result"
 }
-scan gitleaks gitleaks detect --source . --no-banner --redact
+scan gitleaks gitleaks detect --source . --no-banner --redact \
+  --report-format sarif --report-path target/jankurai/security/gitleaks.sarif
 scan zizmor zizmor --no-progress .github/workflows
+zizmor --no-progress --format sarif .github/workflows > target/jankurai/security/zizmor.sarif
 scan actionlint actionlint .github/workflows/*.yml
 if [[ -f Cargo.toml ]]; then
   scan cargo-audit cargo audit
@@ -21,5 +23,5 @@ if [[ -f Cargo.toml ]]; then
 fi
 if [[ -f package-lock.json ]]; then scan npm npm audit --audit-level=high; fi
 scan syft syft scan dir:. --exclude './target/**' --exclude './.git/**' --exclude './node_modules/**' \
-  -o cyclonedx-json=target/jankurai/security/sbom.json
-scan grype grype sbom:target/jankurai/security/sbom.json --fail-on high
+  -o cyclonedx-json=target/jankurai/security/sbom.cyclonedx.json
+scan grype grype sbom:target/jankurai/security/sbom.cyclonedx.json --fail-on high
