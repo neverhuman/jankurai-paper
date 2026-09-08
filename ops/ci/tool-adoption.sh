@@ -16,7 +16,7 @@ mkdir -p target/jankurai target/jankurai/security target/jankurai/proofbind
 # audit-ci / proof-routing / contract-drift / authz-matrix / agent-tool-supply
 # / release-readiness / cost-budget all adopt the ratchet audit command.
 log "tool-adoption: ratchet audit"
-jankurai audit . --mode ratchet --baseline target/jankurai/accepted-baseline.json --json target/jankurai/repo-score.json --md target/jankurai/repo-score.md
+jankurai audit . --mode ratchet --baseline target/jankurai/accepted-baseline.json --json target/jankurai/repo-score.json --md target/jankurai/repo-score.md --full
 # Adopted artifacts: .jankurai/repo-score.json .jankurai/repo-score.md
 # target/jankurai/repair-queue.jsonl
 
@@ -34,5 +34,5 @@ jankurai vibe coverage --source agent/vibe-coverage.toml --tips tips/vibe_coding
 
 # security: secret + supply-chain evidence in one lane.
 log "tool-adoption: security run"
-jankurai security run . --out target/jankurai/security/evidence.json
+jankurai security run . --out target/jankurai/security/evidence.json --script ops/ci/security-scans.sh
 # Adopted artifact: target/jankurai/security/evidence.json
