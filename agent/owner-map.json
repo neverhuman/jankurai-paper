@@ -21,6 +21,7 @@
     "docs/": "workspace",
     "paper/": "paper",
     "assets/": "paper",
-    "tips/": "paper"
+    "tips/": "paper",
+    ".gitleaksignore": "ops"
   }
 }
