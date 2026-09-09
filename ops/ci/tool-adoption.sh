@@ -22,7 +22,7 @@ jankurai audit . --mode ratchet --baseline target/jankurai/accepted-baseline.jso
 
 # proofbind: changed-surface proof obligation routing.
 log "tool-adoption: proofbind verify"
-jankurai proofbind verify . --changed-from origin/main
+bash ops/ci/proof.sh
 # Adopted artifacts: target/jankurai/proofbind/surface-witness.json
 # target/jankurai/proofbind/obligations.json
 
@@ -31,8 +31,3 @@ jankurai proofbind verify . --changed-from origin/main
 log "tool-adoption: vibe coverage"
 jankurai vibe coverage --source agent/vibe-coverage.toml --tips tips/vibe_coding --json target/jankurai/vibe-coverage.json --md target/jankurai/vibe-coverage.md
 # Adopted artifacts: target/jankurai/vibe-coverage.json target/jankurai/vibe-coverage.md
-
-# security: secret + supply-chain evidence in one lane.
-log "tool-adoption: security run"
-jankurai security run . --out target/jankurai/security/evidence.json --script ops/ci/security-scans.sh
-# Adopted artifact: target/jankurai/security/evidence.json

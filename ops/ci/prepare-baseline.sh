@@ -6,7 +6,7 @@ repo_root="$PWD"
 mkdir -p target/jankurai
 baseline_root="$(mktemp -d "$repo_root/target/ci-baseline.XXXXXX")"
 trap 'rm -rf "$baseline_root"' EXIT
-base="$(git rev-parse refs/remotes/origin/main)"
+base="$(bash ops/ci/comparison-base.sh)"
 git clone --no-hardlinks --no-checkout "$repo_root" "$baseline_root/repo"
 git -C "$baseline_root/repo" checkout --detach "$base"
 jankurai audit "$baseline_root/repo" --mode advisory --no-score-history \

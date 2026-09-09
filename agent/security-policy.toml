@@ -1,38 +1,25 @@
 schema_version = "1.0.0"
 
-# Security tooling for the paper arm. There is no committed dependency manifest
-# here (no Cargo.toml/package.json), so the operational security surface is
-# committed-secret detection plus SHA-pinned CI actions. gitleaks is required;
-# the dependency/provenance scanners apply only when a manifest is added.
-enabled_tools = [
-  "gitleaks",
-  "zizmor",
-  "syft"
-]
-
-required_tools = [
-  "gitleaks"
-]
-
-advisory_tools = [
-  "zizmor",
-  "syft"
-]
+# Every applicable scanner blocks. Dependency scanners run when their manifest
+# is present; workflows and the SBOM are required even for documentation repos.
+enabled_tools = ["gitleaks", "zizmor", "actionlint", "syft", "grype", "cargo-audit", "cargo-deny", "npm", "sbom-validation"]
+required_tools = ["gitleaks", "zizmor", "actionlint", "syft", "grype", "sbom-validation"]
+advisory_tools = []
 
 [severity_thresholds]
 fail_lane_on = "high"
 
 [profiles.local]
-enabled_tools = ["gitleaks"]
-required_tools = ["gitleaks"]
+enabled_tools = ["gitleaks", "zizmor", "actionlint", "syft", "grype", "cargo-audit", "cargo-deny", "npm", "sbom-validation"]
+required_tools = ["gitleaks", "zizmor", "actionlint", "syft", "grype", "sbom-validation"]
 advisory_tools = []
 
 [profiles.ci]
-enabled_tools = ["gitleaks", "zizmor"]
-required_tools = ["gitleaks"]
-advisory_tools = ["zizmor"]
+enabled_tools = ["gitleaks", "zizmor", "actionlint", "syft", "grype", "cargo-audit", "cargo-deny", "npm", "sbom-validation"]
+required_tools = ["gitleaks", "zizmor", "actionlint", "syft", "grype", "sbom-validation"]
+advisory_tools = []
 
 [profiles.release]
-enabled_tools = ["gitleaks", "zizmor", "syft"]
-required_tools = ["gitleaks", "zizmor"]
-advisory_tools = ["syft"]
+enabled_tools = ["gitleaks", "zizmor", "actionlint", "syft", "grype", "cargo-audit", "cargo-deny", "npm", "sbom-validation"]
+required_tools = ["gitleaks", "zizmor", "actionlint", "syft", "grype", "sbom-validation"]
+advisory_tools = []
