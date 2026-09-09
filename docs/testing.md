@@ -9,7 +9,7 @@ compiles end to end and the audit gate passes.
 Use Node 24 and run `npm ci` before the local proof lanes. The lockfile pins
 AJV and its format validators; `npm test` runs the aggregate, scanner-failure,
 and stale/invalid-artifact tests with temporary controlled subprocesses.
-Those fixtures are only tests; release qualification also runs the real tools.
+The controlled subprocesses test the lane; hosted CI also runs the real tools.
 
 `bash scripts/ci-local.sh security` and `just security` run one strict scanner
 entrypoint. Gitleaks, zizmor, actionlint, Syft, CycloneDX validation, and Grype
