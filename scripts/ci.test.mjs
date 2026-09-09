@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+import { validateBadgeSource } from '../ops/ci/verify-badge-source.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { cpSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync, chmodSync,
@@ -155,4 +157,32 @@ test('comparison base checks actual PR, resulting-main, and divergent commit gra
   assert.notEqual(compare().status, 0);
   git(['update-ref', '-d', 'refs/remotes/origin/main']);
   assert.notEqual(compare().status, 0);
+});
+
+
+test('public badge binds a clean passing report to its source and binary', () => {
+  const text = readFileSync(join(root, 'agent/baselines/main.repo-score.json'), 'utf8');
+  const provenance = JSON.parse(readFileSync(join(root, 'agent/baselines/main.repo-score.provenance.json')));
+  const report = validateBadgeSource(text, provenance);
+  assert.equal(report.decision.passed, true);
+  assert.throws(() => validateBadgeSource(text + ' ', provenance));
+  assert.throws(() => validateBadgeSource(text, { ...provenance, audited_commit: '0'.repeat(40) }));
+  assert.throws(() => validateBadgeSource(text, { ...provenance, auditor_binary_sha256: '' }));
+  for (const change of [
+    d => { d.decision.status = 'advisory'; },
+    d => { d.decision.hard_findings = 1; },
+    d => { d.findings.push({ hardness: 'hard' }); },
+    d => { d.score = d.decision.minimum_score - 1; },
+    d => { d.decision.minimum_score = 0; },
+    d => { delete d.policy.minimum_score; },
+    d => { d.dirty_worktree = true; },
+    d => { d.scope.mode = 'changed'; },
+    d => { d.scope.paths = ['one-file']; },
+  ]) {
+    const forged = structuredClone(report); change(forged);
+    const body = JSON.stringify(forged);
+    // Even updating the digest cannot make a contradictory decision qualify.
+    const modified = { ...provenance, report_sha256: createHash('sha256').update(body).digest('hex') };
+    assert.throws(() => validateBadgeSource(body, modified));
+  }
 });

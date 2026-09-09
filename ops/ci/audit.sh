@@ -13,6 +13,7 @@ assert_artifact .jankurai/repo-score.json
 assert_artifact .jankurai/repo-score.md
 
 if [[ -f agent/badge.toml ]]; then
+  node ops/ci/verify-badge-source.mjs
   log "audit lane: jankurai badge --check"
   grep -q 'jankurai-badge:start' README.md
   test -s agent/jankurai-badge.svg
