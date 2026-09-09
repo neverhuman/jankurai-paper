@@ -1,0 +1,13 @@
+# Historical documentation: API-surface hashes and a fixed phase12 fixture key.
+# Exact commit/path/rule/line fingerprints only; future secrets remain blocking.
+# Split extraction: individually verified literal phase12-fixture-key examples.
+43834faa3bb02481785bcdd410b5cdb3ec7ae586:tips/phases_feedback/12-phase/tip1.txt:generic-api-key:1942
+43834faa3bb02481785bcdd410b5cdb3ec7ae586:tips/phases_feedback/12-phase/tip1.txt:generic-api-key:1984
+43834faa3bb02481785bcdd410b5cdb3ec7ae586:tips/phases_feedback/12-phase/tip1.txt:generic-api-key:2006
+5e85a4de2ce59a8d1fc7865520665af58e9e6727:reference/repo-standard/blueprint/examples/agent-map.example.json:generic-api-key:82
+5e85a4de2ce59a8d1fc7865520665af58e9e6727:reference/repo-standard/blueprint/examples/agent-map.example.json:generic-api-key:133
+5e85a4de2ce59a8d1fc7865520665af58e9e6727:reference/repo-standard/blueprint/examples/agent-map.example.json:generic-api-key:184
+5e85a4de2ce59a8d1fc7865520665af58e9e6727:reference/repo-standard/blueprint/examples/agent-map.example.json:generic-api-key:226
+5e85a4de2ce59a8d1fc7865520665af58e9e6727:tips/phases_feedback/12-phase/tip1.txt:generic-api-key:1942
+5e85a4de2ce59a8d1fc7865520665af58e9e6727:tips/phases_feedback/12-phase/tip1.txt:generic-api-key:1984
+5e85a4de2ce59a8d1fc7865520665af58e9e6727:tips/phases_feedback/12-phase/tip1.txt:generic-api-key:2006

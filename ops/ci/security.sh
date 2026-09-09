@@ -14,7 +14,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 cd "$REPO_ROOT"
 
 log "security lane: running canonical tools/security-lane.sh"
-bash tools/security-lane.sh
+jankurai security run . --strict --profile ci --script tools/security-lane.sh \
+  --out target/jankurai/security/evidence.json
 
 assert_artifact target/jankurai/security/evidence.json
 assert_artifact target/jankurai/security/gitleaks.sarif

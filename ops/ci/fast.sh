@@ -13,4 +13,4 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=paper paper/jankura
 
 mkdir -p target/jankurai
 log "fast lane: changed-fast target-only self-audit"
-jankurai audit . --changed-fast --no-score-history --json target/jankurai/fast-score.json --md target/jankurai/fast-score.md
+jankurai audit . --changed-fast --changed-from origin/main --no-score-history --json target/jankurai/fast-score.json --md target/jankurai/fast-score.md

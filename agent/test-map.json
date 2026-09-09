@@ -88,6 +88,10 @@
     ".": {
       "command": "bash scripts/ci-local.sh audit",
       "purpose": "required local proof for jankurai-paper"
+    },
+    ".gitleaksignore": {
+      "command": "bash ops/ci/github-check.sh",
+      "purpose": "scan secrets with exact historical documentation fingerprints"
     }
   }
 }
