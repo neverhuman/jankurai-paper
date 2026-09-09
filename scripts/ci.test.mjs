@@ -60,6 +60,28 @@ function fixture(t) {
 const steps = result => result.stdout.split('\n').filter(s => s.startsWith('jankurai-security-step='))
   .map(s => JSON.parse(s.slice('jankurai-security-step='.length)));
 
+test('a successful TeX process must leave a real PDF before publishing its hash', t => {
+  const f = fixture(t);
+  writeFileSync(join(f.bin, 'latexmk'), '#!/usr/bin/env bash\nexit 0\n', { mode: 0o755 });
+  mkdirSync(join(f.cwd, 'paper'));
+  const pdf = join(f.cwd, 'paper/jankurai.pdf');
+  const output = join(f.cwd, 'target/jankurai/paper-build.sha256');
+  const run = () => f.run({}, 'ops/ci/required.sh');
+  assert.notEqual(run().status, 0);
+  writeFileSync(pdf, '');
+  assert.notEqual(run().status, 0);
+  rmSync(pdf);
+  const sentinel = join(f.cwd, 'outside.pdf');
+  writeFileSync(sentinel, 'preserve this input'); symlinkSync(sentinel, pdf);
+  assert.notEqual(run().status, 0);
+  assert.equal(readFileSync(sentinel, 'utf8'), 'preserve this input');
+  assert.equal(existsSync(output), false);
+  rmSync(pdf); writeFileSync(pdf, '%PDF-fixture');
+  const result = run(); assert.equal(result.status, 0, result.stderr);
+  assert.equal(readFileSync(output, 'utf8'),
+    `${createHash('sha256').update('%PDF-fixture').digest('hex')}  paper/jankurai.pdf\n`);
+});
+
 test('success runs each scanner once and publishes a validated inventory', t => {
   const f = fixture(t); const result = f.run();
   assert.equal(result.status, 0, result.stdout + result.stderr);

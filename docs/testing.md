@@ -1,8 +1,8 @@
 # Testing and proof lanes
 
-This repository has no executable product code; its "tests" are the deterministic
-build of the paper plus the jankurai self-audit. A green build means the TeX
-compiles end to end and the audit gate passes.
+This repository builds the paper and tests its CI tooling. The required lane
+checks the tooling and compiles TeX; the full quality gate also requires the
+security, proof, and ratchet checks to pass.
 
 ## CI tooling and security evidence
 
@@ -42,13 +42,16 @@ through the root [`Justfile`](../Justfile), through
 
 The narrowest proof loop for agent iteration is `just fast`.
 
-## Determinism
+## Build inputs and output
 
-The build is reproducible: `latexmk` is driven non-interactively
+The build runs `latexmk` non-interactively
 (`-interaction=nonstopmode -halt-on-error`) and all output is routed to the
 `paper/` out-dir. The bibliography and generated tables are derived from
-committed data sources under `paper/data/`, so the same inputs always produce the
-same PDF.
+committed data sources under `paper/data/`. The required lane checks for a
+nonempty regular PDF and records its SHA-256 in
+`target/jankurai/paper-build.sha256`. CI uploads both with `quality-evidence`.
+Bit-for-bit reproducibility also needs a fixed TeX installation, fonts, and
+timestamp configuration; a successful compilation alone does not establish it.
 
 ## Routing
 
@@ -87,7 +90,7 @@ truth; prefer it over ad hoc log spam under `target/jankurai/`.
 
 ## Cost budget and stop conditions
 
-The paper build and audit are cheap, bounded, single-shot CI jobs. Explicit
+The quality job builds the auditor and paper and runs network-backed scanners. Explicit
 budgets, quotas, and stop conditions bound every lane:
 
 - **Budget / quota**: each job declares a hard `timeout-minutes` in
@@ -102,19 +105,20 @@ budgets, quotas, and stop conditions bound every lane:
   spend.
 - **No paid surface**: network access installs pinned tools and dependencies and retrieves
   security advisory databases; no paid APIs run, so the per-run cost is bounded to the CI minutes
-  for one `latexmk` build plus one audit.
+  for the complete quality job.
 
 ## Build acceleration
 
 The fast lane is incremental: `latexmk` reuses its `paper/jankurai.fdb_latexmk`
 and `paper/jankurai.fls` dependency database to rebuild only changed sections,
-and CI restores the TeX Live install and that latexmk build state from
-`actions/cache` keyed on the TeX and bib sources (see the `Cache TeX Live` step
-in [`ci.yml`](../.github/workflows/ci.yml)). The proof loop is targeted: a
-change under `paper/` reruns only the paper build, not the whole gate.
+locally. Hosted CI starts from its checked-out sources and installs the TeX
+packages through `ops/ci/github-setup.sh`; the workflow currently has no TeX
+cache step. The mapped proof command can target the paper build, while the
+protected quality job still runs the full gate.
 
 ## CI
 
-[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs the `build`
-(fast) and `audit` jobs on every push and pull request. All third-party actions
-are pinned to full commit SHAs.
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs `quality` on
+main pushes and pull requests. `jankurai-paper/required` accepts only that
+exact successful lane. Both checks are required on protected main and bound to
+the GitHub Actions app. All third-party actions are pinned to full commit SHAs.

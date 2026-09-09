@@ -18,15 +18,14 @@ install: setup
 bootstrap: setup
 
 # Deterministic fast lane: the narrowest proof loop for agent iteration.
-# Builds the paper PDF reproducibly (incremental via latexmk's .fdb_latexmk
+# Builds the paper PDF (incremental via latexmk's .fdb_latexmk
 # recorder cache), then runs a changed-surface, target-only jankurai self-audit.
 fast:
-    latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=paper paper/jankurai.tex
-    jankurai audit . --changed-fast --no-score-history --json target/jankurai/fast-score.json --md target/jankurai/fast-score.md --timings-json target/jankurai/audit-fast.json
+    bash ops/ci/fast.sh
 
 # Full self-audit writing the canonical repo-score artifacts.
 score:
-    jankurai audit . --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md
+    bash ops/ci/audit.sh
 
 # Generate an agent context pack: a token-bounded routing brief for the next
 # agent, derived from the owner/test maps and docs.
@@ -40,11 +39,7 @@ check:
 # Verify is an alias of check for agents that look for a `verify` lane.
 verify: check
 
-# Security lane: secret scanning, CI workflow supply-chain lint, and an SBOM /
-# provenance record. This repo ships no dependency manifest, so the security
-# surface is committed secrets, SHA-pinned CI actions, and a build-toolchain SBOM.
-# gitleaks detects committed secrets; jankurai security run writes the validated
-# operational evidence artifact.
+# Blocking scanners include the locked Node tooling and a validated SBOM.
 security:
     bash ops/ci/security.sh
 

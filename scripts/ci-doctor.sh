@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# CI doctor: confirms the local environment has every tool the ops/ci lanes
-# depend on, with the versions pinned in ops/ci/lib.sh. Run this before pushing
-# to verify your machine matches what GitHub Actions provides.
+# CI doctor checks required tools and Node's major version. Hosted setup selects
+# tools in github-setup.sh and ci.yml; this check is not a provenance receipt.
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/../ops/ci/lib.sh"
 
@@ -22,7 +21,8 @@ if command -v node >/dev/null 2>&1 && [[ "$(node -p 'process.versions.node.split
   status=1
 fi
 
-log "pinned versions: texlive=$TEXLIVE_VERSION latexmk=$LATEXMK_VERSION"
+if command -v latexmk >/dev/null 2>&1; then latexmk -version; fi
+if command -v pdflatex >/dev/null 2>&1; then pdflatex --version; fi
 
 if [ "$status" -ne 0 ]; then
   printf '[ci] environment does not match CI; install the tools above\n' >&2

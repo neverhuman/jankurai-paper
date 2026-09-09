@@ -8,10 +8,6 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 export REPO_ROOT
 
-# Pinned tool versions. Lanes read these so CI and local environments match.
-export TEXLIVE_VERSION="${TEXLIVE_VERSION:-2024}"
-export LATEXMK_VERSION="${LATEXMK_VERSION:-4.85}"
-
 # log <message> -- emit a structured progress line.
 log() {
   printf '[ci] %s\n' "$*"
