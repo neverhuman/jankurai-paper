@@ -1,6 +1,6 @@
 {
-  "report_fingerprint": "sha256:403449420878617be08d881569a3f2bc69486b0c8c7273593ac7c2dd9d7b3bd9",
-  "input_fingerprint": "sha256:882d7def4b39452134c275470b97866fbeb6d3af181bce4117bbbe00a7884910",
+  "report_fingerprint": "sha256:47ebd0d106f5443af00143d947f8e57e44341567a53c6b8426a1b5575e9b511c",
+  "input_fingerprint": "sha256:29de3bb22e3c1a3d6ac4cf511370dd4118ca2de6827fcbf5f34c4f96e8d3f531",
   "policy_fingerprint": "sha256:1617106136d7ddf5b3aa106f2979a5d3af60e3ea30c702102e79263eda69fb82",
   "manifest_fingerprints": {
     "owner_map": "sha256:4a34d80b2ead0565074dd88c90818e7c0c67dfc552bab305536d0aa939bc36b5",
@@ -9,8 +9,8 @@
     "boundaries": "sha256:8b14d9a4c3ecfd5fc4ba25f8b7e92c6bd11d4904714cdaf9cc29683fcc2ec205",
     "standard_version": "sha256:926befe8516f7b117d71c83de0321508e36b96a0f4f4b605d28018c3954a1f37"
   },
-  "dirty_worktree": true,
-  "generated_at": "1788918286",
+  "dirty_worktree": false,
+  "generated_at": "1788927806",
   "schema_url": "schemas/repo-score.schema.json",
   "standard": "jankurai",
   "standard_version": "0.9.0",
@@ -20,29 +20,31 @@
   "target_stack_id": "rust-ts-vite-react-postgres-bounded-python",
   "target_stack": "Rust core + TypeScript/React/Vite + PostgreSQL + generated contracts + exception-only Python AI/data service",
   "claimed_conformance_level": "HL3",
-  "observed_conformance_level": "HL3",
-  "conformance_decision": "pass",
-  "conformance_blockers": [],
-  "repo": "/home/ubuntu/jankurai-split/jankurai-paper",
-  "run_id": "1788918286",
-  "started_at": "1788918286",
-  "elapsed_ms": 570,
+  "observed_conformance_level": "HL2",
+  "conformance_decision": "block",
+  "conformance_blockers": [
+    "HLT-002-GENERATED-MUTATION on agent/generated-zones.toml"
+  ],
+  "repo": ".",
+  "run_id": "1788927806",
+  "started_at": "1788927806",
+  "elapsed_ms": 621,
   "scope": {
     "mode": "full",
     "paths": []
   },
-  "score": 86,
-  "raw_score": 86,
+  "score": 89,
+  "raw_score": 89,
   "decision": {
     "status": "advisory",
     "minimum_score": 85,
     "passed": true,
-    "hard_findings": 0,
-    "soft_findings": 3,
+    "hard_findings": 1,
+    "soft_findings": 2,
     "ratchet": {
-      "baseline_score": 86,
+      "baseline_score": 89,
       "allowed_drop": 0,
-      "passed": true,
+      "passed": false,
       "score_delta": 0,
       "baseline_report_fingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
       "baseline_input_fingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
@@ -53,14 +55,14 @@
     }
   },
   "git": {
-    "head": "17f4df0",
+    "head": "7d8883e",
     "base": null,
     "changed_files": 0,
     "mode": "full",
-    "dirty_worktree": true
+    "dirty_worktree": false
   },
   "policy": {
-    "path": "/home/ubuntu/jankurai-split/jankurai-paper/agent/audit-policy.toml",
+    "path": "./agent/audit-policy.toml",
     "minimum_score": 85,
     "fail_on": [
       "critical",
@@ -72,7 +74,7 @@
     ],
     "mode": "advisory",
     "standard_version": "0.9.0",
-    "auditor_version": "1.6.11",
+    "auditor_version": "1.7.0",
     "schema_version": "1.9.0",
     "paper_edition": "2026.05-ed8",
     "target_stack": "rust-ts-vite-react-postgres-bounded-python"
@@ -350,9 +352,11 @@
     {
       "name": "Data truth and workflow safety",
       "weight": 8,
-      "score": 50,
-      "weighted_points": 4.0,
-      "evidence": [],
+      "score": 90,
+      "weighted_points": 7.2,
+      "evidence": [
+        "no adopter product DB surface; standards/tooling repo classification is explicit"
+      ],
       "notes": []
     },
     {
@@ -426,14 +430,18 @@
     "has_rendered_ux_lane": true,
     "missing_categories": [],
     "evidence": {
-      "accessibility": [],
+      "accessibility": [
+        "agent/baselines/main.repo-score.json"
+      ],
       "api_mocks": [],
       "artifact_backed_proof": [],
       "design_tokens": [],
       "geometry_runtime": [],
       "layout_stability": [],
       "playwright_visual": [],
-      "storybook": [],
+      "storybook": [
+        "agent/baselines/main.repo-score.json"
+      ],
       "visual_review": []
     }
   },
@@ -931,32 +939,16 @@
     },
     "missing": []
   },
-  "security_evidence": {
-    "artifact": {
-      "path": "target/jankurai/security/evidence.json",
-      "envelope_exit_code": 0,
-      "elapsed_ms": 7171,
-      "wrapper_strict": true,
-      "profile": "ci",
-      "commands_ran": 5,
-      "commands_skipped": 0,
-      "commands_failed": 0,
-      "required_commands_skipped": 0,
-      "required_commands_failed": 0,
-      "blocking_commands": [],
-      "generated_at": "1788909336",
-      "git_head": "156395e6e52ca5c27506dc61328550272a6712da"
-    }
-  },
+  "security_evidence": {},
   "boundaries": {
     "reclassifications": []
   },
   "copy_code": {
     "schema_version": "1.1.0",
     "generated_by": "jankurai copy-code",
-    "generated_at": "2026-09-09T01:44:45.524372907+00:00",
-    "repo": "/home/ubuntu/jankurai-split/jankurai-paper",
-    "auditor_version": "1.6.11",
+    "generated_at": "2026-09-09T04:23:25.559880432+00:00",
+    "repo": ".",
+    "auditor_version": "1.7.0",
     "status": "pass",
     "policy": {
       "active_source_only": true,
@@ -992,7 +984,7 @@
       ]
     },
     "summary": {
-      "files_scanned": 143,
+      "files_scanned": 145,
       "files_considered": 0,
       "active_files": 0,
       "exact_file_classes": 0,
@@ -1223,6 +1215,79 @@
       "noncanonical_count": 0
     }
   },
+  "vibe_coverage": {
+    "source_path": "agent/vibe-coverage.toml",
+    "issue_count": 260,
+    "source_ref_count": 260,
+    "unmapped_source_rows": 0,
+    "coverage_counts": {
+      "detector-backed": 17,
+      "partial": 243
+    },
+    "tlr_counts": {
+      "Business truth": 26,
+      "Context/setup": 14,
+      "Entropy": 25,
+      "Repair": 19,
+      "Security": 114,
+      "Verification": 62
+    },
+    "priority_counts": {
+      "P0": 17,
+      "P1": 203,
+      "P2": 40
+    },
+    "top_gaps": [
+      {
+        "id": "VCOV-TIP1-R001",
+        "name": "Accept-All Blindness",
+        "coverage": "partial",
+        "priority": "P1",
+        "gap": "needs issue-specific fixture, CI artifact, or governance receipt evidence before claiming detector-backed coverage",
+        "next_action": "attach narrowed detector evidence or accepted governance receipt for this row family"
+      },
+      {
+        "id": "VCOV-TIP1-R002",
+        "name": "Looks-Correct-but-Insecure Code",
+        "coverage": "partial",
+        "priority": "P1",
+        "gap": "needs issue-specific fixture, CI artifact, or governance receipt evidence before claiming detector-backed coverage",
+        "next_action": "attach narrowed detector evidence or accepted governance receipt for this row family"
+      },
+      {
+        "id": "VCOV-TIP1-R003",
+        "name": "Broken Access Control / IDOR / BOLA",
+        "coverage": "partial",
+        "priority": "P1",
+        "gap": "needs issue-specific fixture, CI artifact, or governance receipt evidence before claiming detector-backed coverage",
+        "next_action": "attach narrowed detector evidence or accepted governance receipt for this row family"
+      },
+      {
+        "id": "VCOV-TIP1-R004",
+        "name": "Confusing Public vs. Private Visibility",
+        "coverage": "partial",
+        "priority": "P1",
+        "gap": "needs issue-specific fixture, CI artifact, or governance receipt evidence before claiming detector-backed coverage",
+        "next_action": "attach narrowed detector evidence or accepted governance receipt for this row family"
+      },
+      {
+        "id": "VCOV-TIP1-R005",
+        "name": "Database Row-Level Security Misconfiguration",
+        "coverage": "partial",
+        "priority": "P1",
+        "gap": "needs issue-specific fixture, CI artifact, or governance receipt evidence before claiming detector-backed coverage",
+        "next_action": "attach narrowed detector evidence or accepted governance receipt for this row family"
+      },
+      {
+        "id": "VCOV-TIP1-R007",
+        "name": "AI Chat History Leakage",
+        "coverage": "partial",
+        "priority": "P1",
+        "gap": "needs issue-specific fixture, CI artifact, or governance receipt evidence before claiming detector-backed coverage",
+        "next_action": "attach narrowed detector evidence or accepted governance receipt for this row family"
+      }
+    ]
+  },
   "findings": [
     {
       "severity": "medium",
@@ -1270,37 +1335,38 @@
       "owner": "ops"
     },
     {
-      "severity": "medium",
-      "category": "data",
-      "path": "db/",
-      "problem": "`Data truth and workflow safety` scored 50 below the standard floor of 85",
-      "agent_fix": "move durable truth into migrations, constraints, adapters, and application-owned transactions",
+      "severity": "high",
+      "category": "generated",
+      "path": "agent/generated-zones.toml",
+      "problem": "generated zone file `target/` is missing",
+      "agent_fix": "regenerate `target/` using the declared command, or remove the zone entry if the file was deleted intentionally",
       "evidence": [
-        "Data truth and workflow safety scored 50"
+        "generated zone integrity violation"
       ],
-      "check_id": "HLT-006-DIRECT-DB-WRONG-LAYER:data",
-      "hardness": "soft",
-      "confidence": 0.76,
-      "evidence_kind": "sql",
+      "check_id": "HLT-002-GENERATED-MUTATION:generated",
+      "hardness": "hard",
+      "confidence": 0.95,
+      "evidence_kind": "contract-manifest",
       "rerun_command": "just fast",
-      "fingerprint": "sha256:6dc277f838aa42b508c136f6ba666d602ecefe226bc4c238b24388640ee21f82",
-      "rule_id": "HLT-006-DIRECT-DB-WRONG-LAYER",
+      "fingerprint": "sha256:5426237a11233c74602294c2b6d8972d6256c78c8d467e736b858848adf5d755",
+      "rule_id": "HLT-002-GENERATED-MUTATION",
       "tlr": "Contracts/data",
-      "lane": "db",
-      "docs_url": "docs/audit-rubric.md#required-shape",
-      "owner": "tools"
+      "lane": "contract",
+      "docs_url": "agent/JANKURAI_STANDARD.md#generated-zones",
+      "owner": "agent",
+      "line": 1
     }
   ],
   "agent_fix_queue": [
     {
-      "path": "db/",
-      "priority": "medium",
-      "rule_id": "HLT-006-DIRECT-DB-WRONG-LAYER",
+      "path": "agent/generated-zones.toml",
+      "priority": "high",
+      "rule_id": "HLT-002-GENERATED-MUTATION",
       "tlr": "Contracts/data",
-      "lane": "db",
-      "owner": "tools",
-      "task": "move durable truth into migrations, constraints, adapters, and application-owned transactions",
-      "why": "`Data truth and workflow safety` scored 50 below the standard floor of 85"
+      "lane": "contract",
+      "owner": "agent",
+      "task": "regenerate `target/` using the declared command, or remove the zone entry if the file was deleted intentionally",
+      "why": "generated zone file `target/` is missing"
     },
     {
       "path": "Justfile",
