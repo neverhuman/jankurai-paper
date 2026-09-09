@@ -1,5 +1,9 @@
 # jankurai-paper
 
+<!-- jankurai-badge:start -->
+[![Jankurai score: 86/100](agent/jankurai-badge.svg)](agent/jankurai-badge.json)
+<!-- jankurai-badge:end -->
+
 [![jankurai audit](agent/jankurai-badge.svg)](agent/jankurai-badge.svg)
 
 LaTeX source, paper data, figures, and the build lane for the **jankurai** paper.
