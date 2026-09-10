@@ -88,7 +88,7 @@ test('success runs each scanner once and publishes a validated inventory', t => 
   assert.deepEqual(f.calls().map(c => c[0]), ['gitleaks', 'zizmor', 'actionlint', 'syft', 'grype']);
   assert.equal(steps(result).length, 6);
   assert.ok(steps(result).every(s => s.exit_code === 0 && s.advisory === false));
-  assert.equal(JSON.parse(readFileSync(join(f.cwd, 'target/jankurai/security/sbom.cyclonedx.json'))).bomFormat, 'CycloneDX');
+  assert.equal(JSON.parse(readFileSync(join(f.cwd, 'target/jankurai/security/sbom.json'))).bomFormat, 'CycloneDX');
 });
 for (const tool of ['gitleaks', 'zizmor', 'actionlint', 'syft', 'grype']) {
   test(`${tool} failure blocks and preserves its actual outcome`, t => {
@@ -98,7 +98,7 @@ for (const tool of ['gitleaks', 'zizmor', 'actionlint', 'syft', 'grype']) {
     assert.equal(steps(result).at(-1).status, 'failed');
     assert.equal(steps(result).at(-1).exit_code, 23);
     assert.equal(steps(result).at(-1).advisory, false);
-    assert.equal(existsSync(join(f.cwd, 'target/jankurai/security/sbom.cyclonedx.json')), false);
+    assert.equal(existsSync(join(f.cwd, 'target/jankurai/security/sbom.json')), false);
   });
 }
 test('missing Syft blocks without finding another system copy', t => {
@@ -118,7 +118,7 @@ test('zero-exit SARIF findings block and remain available for inspection', t => 
 });
 for (const kind of ['missing', 'text', 'schema', 'stale', 'mtime', 'producer', 'inventory', 'format', 'timestamp', 'duplicate', 'symlink', 'email', 'iri']) {
   test(`${kind} SBOM blocks before Grype and cannot reuse the previous inventory`, t => {
-    const f = fixture(t); const stable = join(f.cwd, 'target/jankurai/security/sbom.cyclonedx.json');
+    const f = fixture(t); const stable = join(f.cwd, 'target/jankurai/security/sbom.json');
     mkdirSync(dirname(stable), { recursive: true }); writeFileSync(stable, '{"bomFormat":"CycloneDX"}');
     writeFileSync(join(f.cwd, 'old-sbom.json'), '{"bomFormat":"CycloneDX"}');
     const result = f.run({ SBOM_KIND: kind });

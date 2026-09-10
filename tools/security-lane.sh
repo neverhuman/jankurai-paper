@@ -6,7 +6,7 @@ mkdir -p target/jankurai/security
 run_dir="$(mktemp -d target/jankurai/security/run.XXXXXX)"
 started="$(date +%s)"
 # Prior runs remain in run.*; stable names must never stand in for new output.
-rm -f target/jankurai/security/{gitleaks.sarif,zizmor.sarif,sbom.cyclonedx.json}
+rm -f target/jankurai/security/{gitleaks.sarif,zizmor.sarif,sbom.json}
 scan() {
   local tool="$1"; shift
   local status=ran result=0
@@ -36,10 +36,10 @@ if [[ -f package.json ]]; then
   scan npm npm audit --audit-level=high
 fi
 scan syft syft scan dir:. --exclude './target/**' --exclude './.git/**' --exclude './node_modules/**' \
-  -o "cyclonedx-json=$run_dir/sbom.cyclonedx.json"
-scan sbom-validation node ops/ci/validate-sbom.mjs "$run_dir/sbom.cyclonedx.json" "$started"
-scan grype grype "sbom:$run_dir/sbom.cyclonedx.json" --fail-on high
-for artifact in gitleaks.sarif zizmor.sarif sbom.cyclonedx.json; do
+  -o "cyclonedx-json=$run_dir/sbom.json"
+scan sbom-validation node ops/ci/validate-sbom.mjs "$run_dir/sbom.json" "$started"
+scan grype grype "sbom:$run_dir/sbom.json" --fail-on high
+for artifact in gitleaks.sarif zizmor.sarif sbom.json; do
   [[ -s "$run_dir/$artifact" && ! -L "$run_dir/$artifact" ]]
   cp "$run_dir/$artifact" "target/jankurai/security/$artifact"
 done
