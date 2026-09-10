@@ -7,9 +7,9 @@
 default:
     @just --list
 
-# One-command bootstrap: install the TeX toolchain components this repo needs.
+# Install the locked CI tools and verify the required TeX installation.
 setup:
-    tlmgr install latexmk biber || true
+    npm ci
     latexmk -version
 
 # Alias for setup so `just install` and `just bootstrap` also resolve.
@@ -18,15 +18,15 @@ install: setup
 bootstrap: setup
 
 # Deterministic fast lane: the narrowest proof loop for agent iteration.
-# Builds the paper PDF reproducibly (incremental via latexmk's .fdb_latexmk
+# Builds the paper PDF (incremental via latexmk's .fdb_latexmk
 # recorder cache), then runs a changed-surface, target-only jankurai self-audit.
 fast:
-    latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=paper paper/jankurai.tex
-    jankurai audit . --changed-fast --no-score-history --json target/jankurai/fast-score.json --md target/jankurai/fast-score.md --timings-json target/jankurai/audit-fast.json
+    bash ops/ci/fast.sh
+    jankurai audit . --changed-fast --changed-from origin/main --no-score-history --json target/jankurai/fast-score.json --md target/jankurai/fast-score.md
 
 # Full self-audit writing the canonical repo-score artifacts.
 score:
-    jankurai audit . --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md
+    jankurai audit . --mode standard --no-badge --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md --full
 
 # Generate an agent context pack: a token-bounded routing brief for the next
 # agent, derived from the owner/test maps and docs.
@@ -34,20 +34,15 @@ context-pack:
     jankurai context-pack . --out target/jankurai/context-pack.json --md target/jankurai/context-pack.md
 
 # Run the full local check: build the paper, scan for secrets, then self-audit.
-check: fast security audit
+check:
+    bash ops/ci/quality-gates.sh
 
 # Verify is an alias of check for agents that look for a `verify` lane.
 verify: check
 
-# Security lane: secret scanning, CI workflow supply-chain lint, and an SBOM /
-# provenance record. This repo ships no dependency manifest, so the security
-# surface is committed secrets, SHA-pinned CI actions, and a build-toolchain SBOM.
-# gitleaks detects committed secrets; jankurai security run writes the validated
-# operational evidence artifact.
+# Blocking scanners include the locked Node tooling and a validated SBOM.
 security:
-    gitleaks detect --source . --no-banner --redact
-    jankurai security run . --out target/jankurai/security/evidence.json
-    bash tools/security-lane.sh
+    bash ops/ci/security.sh
 
 # Build the paper PDF from the canonical TeX source.
 build:
@@ -55,12 +50,13 @@ build:
 
 # Run the paper build as the test lane (a clean build is the test).
 test:
-    latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=paper paper/jankurai.tex
+    bash ops/ci/required.sh
 
 # Jankurai self-audit lane: writes the repo-score artifacts that CI uploads.
 # `repo-score` is the published artifact name consumed by the audit job.
 audit:
-    jankurai audit . --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md
+    jankurai audit . --mode standard --no-badge --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md --full
+    bash ops/ci/audit.sh
 
 # Print the declared version.
 versions:

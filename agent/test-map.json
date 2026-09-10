@@ -92,6 +92,14 @@
     ".gitleaksignore": {
       "command": "bash ops/ci/github-check.sh",
       "purpose": "scan secrets with exact historical documentation fingerprints"
+    },
+    "package.json": {
+      "command": "bash scripts/ci-local.sh required",
+      "purpose": "verify pinned CI schema tooling and rejection tests"
+    },
+    "package-lock.json": {
+      "command": "bash scripts/ci-local.sh required",
+      "purpose": "verify pinned CI schema tooling and rejection tests"
     }
   }
 }

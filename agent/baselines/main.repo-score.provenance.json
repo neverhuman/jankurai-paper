@@ -1,0 +1,20 @@
+{
+  "audited_commit": "92215bbd1ddc40553e1cebae00fd9f6f1546cea7",
+  "auditor_commit": "e831795178a3fb1d5842122625978d92e41d5af5",
+  "auditor_tree": "be571d5f7aae07b21867cb8662220ea042ce0e9c",
+  "auditor_binary_sha256": "9b728cd4ff288be633350ccd9facf73ece5f8440da710b256d37e6acbdf70cf7",
+  "mode": "standard",
+  "scope": "full",
+  "report_sha256": "df293658259fa277e8e5afe56ccc9ee8477975d4a601c6984395efa19a8e57f1",
+  "report_fingerprint": "sha256:b9ab0e8fa675318c03c28e54e3265e02e8bd54c17766d54b633c3a453059abcd",
+  "schema_version": "1.0.0",
+  "audited_repository": "https://github.com/neverhuman/jankurai-paper",
+  "audited_tree": "a362c97e26b2893f78b7383df673390bc62ef0dc",
+  "source_quality_check": "https://github.com/neverhuman/jankurai-paper/actions/runs/34311347169/job/102338481682",
+  "auditor_repository": "https://github.com/neverhuman/jankurai-core",
+  "auditor_source_quality_run": "https://github.com/neverhuman/jankurai-core/actions/runs/34408159873",
+  "auditor_toolchain": "Rust 1.97.1",
+  "auditor_binary_kind": "local validation build of the exact qualified source tree",
+  "report": "agent/baselines/main.repo-score.json",
+  "interpretation": "Non-executing standard audit of the identified protected revision. Supervised execution and release qualification have separate receipts."
+}

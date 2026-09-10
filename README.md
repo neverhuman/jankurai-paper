@@ -4,6 +4,8 @@
 [![Jankurai score: 89/100](agent/jankurai-badge.svg)](agent/jankurai-badge.json)
 <!-- jankurai-badge:end -->
 
+Badge source: [92215bbd](https://github.com/neverhuman/jankurai-paper/commit/92215bbd1ddc40553e1cebae00fd9f6f1546cea7), with the exact auditor binary recorded in [audit provenance](agent/baselines/main.repo-score.provenance.json).
+
 LaTeX source, paper data, figures, and the build lane for the **jankurai** paper.
 This repository is one member of the Jankurai split family; read
 [`SPLIT.md`](SPLIT.md) for the family contract and [`AGENTS.md`](AGENTS.md) for

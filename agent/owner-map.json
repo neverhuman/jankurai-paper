@@ -22,6 +22,8 @@
     "paper/": "paper",
     "assets/": "paper",
     "tips/": "paper",
-    ".gitleaksignore": "ops"
+    ".gitleaksignore": "ops",
+    "package.json": "ops",
+    "package-lock.json": "ops"
   }
 }

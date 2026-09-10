@@ -1,54 +1,45 @@
 #!/usr/bin/env bash
-# Canonical security lane wrapper for jankurai-paper.
-#
-# Emits `jankurai-security-step=` evidence rows and the CI-asserted SARIF/SBOM
-# artifacts. gitleaks is required in the ci profile; zizmor is advisory.
+# One blocking scan per tool. Retain each run, including failed artifacts.
 set -euo pipefail
-cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-mkdir -p target target/jankurai/security
-
-run_step() {
-    local label="$1"
-    local tool="$2"
-    local shell_command="$3"
-    local advisory="$4"
-    shift 4
-    set +e
-    "$@"
-    local exit_code=$?
-    set -e
-    local status="ran"
-    if [[ ${exit_code} -ne 0 ]]; then
-        status="failed"
-    fi
-    printf 'jankurai-security-step={"label":"%s","tool":"%s","shell_command":"%s","status":"%s","advisory":%s,"exit_code":%d}\n' \
-        "${label}" "${tool}" "${shell_command}" "${status}" "${advisory}" "${exit_code}"
-    if [[ "${advisory}" == "true" ]]; then
-        return 0
-    fi
-    return "${exit_code}"
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+mkdir -p target/jankurai/security
+run_dir="$(mktemp -d target/jankurai/security/run.XXXXXX)"
+started="$(date +%s)"
+# Prior runs remain in run.*; stable names must never stand in for new output.
+rm -f target/jankurai/security/{gitleaks.sarif,zizmor.sarif,sbom.json}
+scan() {
+  local tool="$1"; shift
+  local status=ran result=0
+  "$@" || { result=$?; status=failed; }
+  jq -cn --arg tool "$tool" --arg command "$*" --arg status "$status" --argjson result "$result" \
+    '{label:$tool,tool:$tool,shell_command:$command,status:$status,exit_code:$result,advisory:false}' \
+    | sed 's/^/jankurai-security-step=/'
+  return "$result"
 }
-
-echo "[security] secret scan: gitleaks detect"
-run_step gitleaks gitleaks 'gitleaks detect --source . --no-banner --redact' false \
-    gitleaks detect --source . --no-banner --redact \
-    --report-format sarif --report-path target/jankurai/security/gitleaks.sarif
-
-echo "[security] workflow lint: zizmor + actionlint"
-run_step zizmor zizmor 'zizmor --no-progress .github/workflows' true \
-    zizmor --no-progress .github/workflows
-zizmor --no-progress --format sarif .github/workflows > target/jankurai/security/zizmor.sarif
-run_step actionlint actionlint 'actionlint' true \
-    actionlint
-
-echo "[security] SBOM / provenance"
-if command -v syft >/dev/null 2>&1; then
-    run_step syft syft 'syft scan dir:.' true \
-        syft scan dir:. --exclude './target/**' --exclude './.git/**' \
-        -o cyclonedx-json=target/jankurai/security/sbom.cyclonedx.json
-else
-    find paper docs agent README.md AGENTS.md -type f | sort | xargs sha256sum \
-        > target/jankurai/security/sbom.cyclonedx.json
+zizmor_scan() {
+  zizmor --no-progress --format sarif .github/workflows > "$run_dir/zizmor.sarif" || return
+  # SARIF mode exits zero for findings: require complete, empty result sets too.
+  jq -e '.version == "2.1.0" and (.runs | type == "array" and length > 0) and
+    all(.runs[]; (.results | type == "array" and length == 0) and
+      all(.invocations[]?; .executionSuccessful != false))' "$run_dir/zizmor.sarif" > /dev/null
+}
+scan gitleaks gitleaks detect --source . --no-banner --redact \
+  --report-format sarif --report-path "$run_dir/gitleaks.sarif"
+scan zizmor zizmor_scan
+scan actionlint actionlint .github/workflows/*.yml
+if [[ -f Cargo.toml ]]; then
+  scan cargo-audit cargo audit
+  scan cargo-deny cargo deny check advisories bans sources
 fi
-find paper docs agent README.md AGENTS.md -type f | sort | xargs sha256sum > target/sbom.txt
-echo "[security] sbom written to target/sbom.txt"
+if [[ -f package.json ]]; then
+  [[ -f package-lock.json ]] || { echo 'package.json requires a locked dependency inventory' >&2; exit 1; }
+  scan npm npm audit --audit-level=high
+fi
+scan syft syft scan dir:. --exclude './target/**' --exclude './.git/**' --exclude './node_modules/**' \
+  -o "cyclonedx-json=$run_dir/sbom.json"
+scan sbom-validation node ops/ci/validate-sbom.mjs "$run_dir/sbom.json" "$started"
+scan grype grype "sbom:$run_dir/sbom.json" --fail-on high
+for artifact in gitleaks.sarif zizmor.sarif sbom.json; do
+  [[ -s "$run_dir/$artifact" && ! -L "$run_dir/$artifact" ]]
+  cp "$run_dir/$artifact" "target/jankurai/security/$artifact"
+done

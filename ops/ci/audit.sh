@@ -7,12 +7,13 @@ cd "$REPO_ROOT"
 
 mkdir -p .jankurai
 log "audit lane: jankurai audit -> .jankurai/repo-score.{json,md}"
-jankurai audit . --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md --full
+jankurai audit . --mode standard --no-badge --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md --full
 
 assert_artifact .jankurai/repo-score.json
 assert_artifact .jankurai/repo-score.md
 
 if [[ -f agent/badge.toml ]]; then
+  node ops/ci/verify-badge-source.mjs
   log "audit lane: jankurai badge --check"
   grep -q 'jankurai-badge:start' README.md
   test -s agent/jankurai-badge.svg

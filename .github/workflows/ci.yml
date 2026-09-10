@@ -41,6 +41,7 @@ jobs:
             target/jankurai
             .jankurai/repo-score.json
             .jankurai/repo-score.md
+            paper/jankurai.pdf
           include-hidden-files: true
           if-no-files-found: error
   required:

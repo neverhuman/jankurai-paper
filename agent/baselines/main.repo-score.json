@@ -1,6 +1,6 @@
 {
-  "report_fingerprint": "sha256:47ebd0d106f5443af00143d947f8e57e44341567a53c6b8426a1b5575e9b511c",
-  "input_fingerprint": "sha256:29de3bb22e3c1a3d6ac4cf511370dd4118ca2de6827fcbf5f34c4f96e8d3f531",
+  "report_fingerprint": "sha256:b9ab0e8fa675318c03c28e54e3265e02e8bd54c17766d54b633c3a453059abcd",
+  "input_fingerprint": "sha256:30a19d818409e8cad45b533fe95ab9ac3cd333531d856e796f2907acbe2532b9",
   "policy_fingerprint": "sha256:1617106136d7ddf5b3aa106f2979a5d3af60e3ea30c702102e79263eda69fb82",
   "manifest_fingerprints": {
     "owner_map": "sha256:4a34d80b2ead0565074dd88c90818e7c0c67dfc552bab305536d0aa939bc36b5",
@@ -10,7 +10,7 @@
     "standard_version": "sha256:926befe8516f7b117d71c83de0321508e36b96a0f4f4b605d28018c3954a1f37"
   },
   "dirty_worktree": false,
-  "generated_at": "1788927806",
+  "generated_at": "1788996217",
   "schema_url": "schemas/repo-score.schema.json",
   "standard": "jankurai",
   "standard_version": "0.9.0",
@@ -20,15 +20,13 @@
   "target_stack_id": "rust-ts-vite-react-postgres-bounded-python",
   "target_stack": "Rust core + TypeScript/React/Vite + PostgreSQL + generated contracts + exception-only Python AI/data service",
   "claimed_conformance_level": "HL3",
-  "observed_conformance_level": "HL2",
-  "conformance_decision": "block",
-  "conformance_blockers": [
-    "HLT-002-GENERATED-MUTATION on agent/generated-zones.toml"
-  ],
+  "observed_conformance_level": "HL3",
+  "conformance_decision": "pass",
+  "conformance_blockers": [],
   "repo": ".",
-  "run_id": "1788927806",
-  "started_at": "1788927806",
-  "elapsed_ms": 621,
+  "run_id": "1788996217",
+  "started_at": "1788996217",
+  "elapsed_ms": 3721,
   "scope": {
     "mode": "full",
     "paths": []
@@ -36,15 +34,15 @@
   "score": 89,
   "raw_score": 89,
   "decision": {
-    "status": "advisory",
+    "status": "pass",
     "minimum_score": 85,
     "passed": true,
-    "hard_findings": 1,
+    "hard_findings": 0,
     "soft_findings": 2,
     "ratchet": {
       "baseline_score": 89,
       "allowed_drop": 0,
-      "passed": false,
+      "passed": true,
       "score_delta": 0,
       "baseline_report_fingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
       "baseline_input_fingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
@@ -55,7 +53,7 @@
     }
   },
   "git": {
-    "head": "7d8883e",
+    "head": "92215bb",
     "base": null,
     "changed_files": 0,
     "mode": "full",
@@ -72,7 +70,7 @@
       "medium",
       "low"
     ],
-    "mode": "advisory",
+    "mode": "standard",
     "standard_version": "0.9.0",
     "auditor_version": "1.7.0",
     "schema_version": "1.9.0",
@@ -946,7 +944,7 @@
   "copy_code": {
     "schema_version": "1.1.0",
     "generated_by": "jankurai copy-code",
-    "generated_at": "2026-09-09T04:23:25.559880432+00:00",
+    "generated_at": "2026-09-09T23:23:33.738125278+00:00",
     "repo": ".",
     "auditor_version": "1.7.0",
     "status": "pass",
@@ -1333,41 +1331,9 @@
       "lane": "fast",
       "docs_url": "docs/testing.md",
       "owner": "ops"
-    },
-    {
-      "severity": "high",
-      "category": "generated",
-      "path": "agent/generated-zones.toml",
-      "problem": "generated zone file `target/` is missing",
-      "agent_fix": "regenerate `target/` using the declared command, or remove the zone entry if the file was deleted intentionally",
-      "evidence": [
-        "generated zone integrity violation"
-      ],
-      "check_id": "HLT-002-GENERATED-MUTATION:generated",
-      "hardness": "hard",
-      "confidence": 0.95,
-      "evidence_kind": "contract-manifest",
-      "rerun_command": "just fast",
-      "fingerprint": "sha256:5426237a11233c74602294c2b6d8972d6256c78c8d467e736b858848adf5d755",
-      "rule_id": "HLT-002-GENERATED-MUTATION",
-      "tlr": "Contracts/data",
-      "lane": "contract",
-      "docs_url": "agent/JANKURAI_STANDARD.md#generated-zones",
-      "owner": "agent",
-      "line": 1
     }
   ],
   "agent_fix_queue": [
-    {
-      "path": "agent/generated-zones.toml",
-      "priority": "high",
-      "rule_id": "HLT-002-GENERATED-MUTATION",
-      "tlr": "Contracts/data",
-      "lane": "contract",
-      "owner": "agent",
-      "task": "regenerate `target/` using the declared command, or remove the zone entry if the file was deleted intentionally",
-      "why": "generated zone file `target/` is missing"
-    },
     {
       "path": "Justfile",
       "priority": "medium",

@@ -1,70 +1,64 @@
 # Release process
 
-This document is the release control surface for jankurai-paper. It covers the
-version source, the changelog, the release automation, integrity and SBOM
-evidence, and rollback. Launch gates require every section below to be backed by
-a real artifact or command.
+GitHub is authoritative for `neverhuman/jankurai-paper`; `.jeryu/` records
+historical integration metadata. Release tags use
+`jankurai-paper-v<MAJOR.MINOR.PATCH>-split.<N>` from [SPLIT.md](../SPLIT.md).
 
-## Version source
+## Version and changelog
 
-The single source of truth for the version is the [`VERSION`](../VERSION) file at
-the repository root. The version recorded in
-[`agent/standard-version.toml`](../agent/standard-version.toml) and any release
-tag MUST match `VERSION`. Tags follow the family pattern
-`jankurai-paper-v<MAJOR.MINOR.PATCH>-split.<N>` as described in
-[`SPLIT.md`](../SPLIT.md) and [`.jeryu/repo.toml`](../.jeryu/repo.toml).
+[`VERSION`](../VERSION), `agent/standard-version.toml`, and the proposed tag
+must agree. Record actual changes in [CHANGELOG.md](../CHANGELOG.md), then
+promote `Unreleased` to a dated version section in the reviewed release commit.
+The private Node package contains CI tooling and is not separately published.
 
-## Changelog
+## Qualification before tagging
 
-Every release records its user-visible changes in
-[`CHANGELOG.md`](../CHANGELOG.md) under a heading that matches the new `VERSION`.
-The `Unreleased` section is promoted to a dated version heading at tag time.
+1. Install selected tools and TeX packages from `ops/ci/github-setup.sh` and the
+   pinned workflow, use Node 24, and run `npm ci`.
+2. Run `bash scripts/ci-doctor.sh`, then `just check`. The full gate includes
+   tooling tests, TeX build, baseline comparison, strict security, actual proof
+   execution and verification, required proofbind, and zero-drop ratchet.
+   Resolve every failure.
+3. Review the complete PR diff and actual successful `quality` and
+   `jankurai-paper/required` checks for its exact head. Merge through protection
+   and qualify resulting main and its immutable `ci-<full-sha>` tag.
+4. Retain the PDF, its SHA-256, audit and proof reports, security evidence,
+   source commit/tree, and actual tool identities. Verify version agreement and
+   this inventory before creating a versioned release tag.
 
-## Release automation
+Current `ci.yml` publishes qualification tags and `quality-evidence`; it does
+not publish a versioned release or sign a PDF. Downstream consumers select
+immutable qualified tags.
 
-Releases are cut by CI, not by hand:
+## Build integrity and provenance
 
-1. Bump [`VERSION`](../VERSION) and promote the `Unreleased` section of
-   [`CHANGELOG.md`](../CHANGELOG.md).
-2. Run the full local gate: `just check` (build the paper PDF, then run the
-   jankurai self-audit).
-3. Push the version commit. The
-   [`ci.yml`](../.github/workflows/ci.yml) workflow runs the build and jankurai
-   audit jobs and uploads the `repo-score` artifacts.
-4. Tag the release commit with `jankurai-paper-v<version>-split.<N>`. The tag
-   mirror in [`.jeryu/repo.toml`](../.jeryu/repo.toml) publishes the immutable
-   tag to the public GitHub mirror.
+`latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=paper paper/jankurai.tex`
+builds from committed TeX and data. The required lane verifies a nonempty regular
+`paper/jankurai.pdf` and records `target/jankurai/paper-build.sha256`. CI uploads
+both. Bind the distributed PDF to that exact hash and selected source revision.
+Bit-for-bit rebuilding additionally requires fixed TeX packages, fonts, and
+timestamps; a successful build alone does not establish it.
 
-Release builds depend on immutable tags, never branches.
+The security lane requires fresh CycloneDX 1.6 from Syft, validates it against
+pinned offline schemas, and scans it with Grype. The Node dependency lock is also
+audited. A `tlmgr` listing is useful toolchain metadata but is not the required
+validated CycloneDX inventory. A source-directory SBOM does not establish full
+coverage of the runner's TeX installation; record that installation separately
+in the release inventory.
 
-## Integrity, provenance, and SBOM
+Audit, proof, scanner, and failed-run artifacts remain in `quality-evidence`.
+The public badge describes its linked audited revision with explicit source and
+auditor provenance. Imported reports alone do not establish supervised execution
+or release signing authority.
 
-- **Build integrity**: the PDF is reproducible because `latexmk` is driven
-  non-interactively from committed TeX and committed data sources under
-  `paper/data/`; the same inputs always produce the same `paper/jankurai.pdf`.
-- **SBOM**: the build's software bill of materials is the pinned TeX Live package
-  set declared in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
-  (`latexmk`, `biber`) plus the toolchain pins in `ops/ci/lib.sh`. Export it as
-  `sbom.txt` at release time with `tlmgr info --only-installed > sbom.txt` and
-  attach it to the release.
-- **Provenance**: the jankurai audit job publishes the `repo-score` artifacts
-  that prove the release passed the jankurai gate (score, caps, and findings),
-  giving every release an inspectable provenance record.
-- **Action pinning**: every third-party GitHub Action is pinned to a
-  40-character commit SHA so the supply chain of the release pipeline itself is
-  fixed.
+## Release gates and rollback
 
-## Rollback
+Require successful security and proof gates, reviewed source and artifact
+inventory, and a verified restoration of the source backup before publication.
+Monitor resulting-main checks and artifact hashes. Branch protection and
+least-privilege publishing permissions are the abuse controls for this product.
 
-If a release regresses:
-
-1. Identify the last known-good tag
-   (`jankurai-paper-v<version>-split.<N>`).
-2. Re-point consumers at that immutable tag; tags are never moved or deleted.
-3. Open a revert commit that restores the previous `VERSION` and `CHANGELOG.md`
-   state, and add a `### Fixed` entry describing the rollback.
-4. Re-run `just check` to confirm the rolled-back tree builds and audits clean
-   before re-publishing.
-
-Because tags are immutable and the TeX sources and data are committed, any prior
-release PDF can be rebuilt from its tag.
+If a release regresses, point consumers at the previous qualified immutable tag
+and retained PDF. Preserve existing tags, assets, and failure evidence. Any
+revert or correction goes through a new PR and full qualification before a new
+release; rebuilding an old source tag must not silently replace its original PDF.
