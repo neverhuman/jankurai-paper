@@ -73,6 +73,10 @@
       "command": "bash scripts/ci-local.sh required",
       "purpose": "verify CI workflow entrypoints stay pinned and thin"
     },
+    "ops/ci/github-setup.sh": {
+      "command": "bash scripts/ci-local.sh security",
+      "purpose": "prove CI setup hardening on the security lane (HLT-020)"
+    },
     "ops/": {
       "command": "bash scripts/ci-local.sh required",
       "purpose": "verify pinned CI script entrypoints"
