@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Produce real lane receipts before requiring every changed-surface obligation.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 base="$(bash ops/ci/comparison-base.sh)"
