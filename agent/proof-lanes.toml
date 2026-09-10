@@ -1,0 +1,79 @@
+# Proof lanes for jankurai-paper.
+# Named lanes must match agent/test-map.json commands so Core emits rules_covered
+# and proofbind can authenticate agent-tool receipts.
+
+[[lane]]
+name = "required"
+command = "bash scripts/ci-local.sh required"
+purpose = "verify pinned CI scripts, licenses, and workflow entrypoints"
+command_id = "lane.required"
+kind = "validation"
+cost = 2
+rules_covered = [
+  "HLT-003-OWNERLESS-PATH",
+  "HLT-004-UNMAPPED-PROOF",
+  "HLT-008-FALSE-GREEN-RISK",
+  "HLT-024-AGENT-TOOL-SUPPLY-GAP",
+]
+required_artifacts = []
+timeout_seconds = 300
+requires_network = false
+destructive = false
+
+[[lane]]
+name = "fast"
+command = "bash scripts/ci-local.sh fast"
+purpose = "root command surface plus quick documentation checks"
+command_id = "lane.fast"
+kind = "validation"
+cost = 5
+rules_covered = [
+  "HLT-001-DEAD-MARKER",
+  "HLT-003-OWNERLESS-PATH",
+  "HLT-004-UNMAPPED-PROOF",
+  "HLT-008-FALSE-GREEN-RISK",
+]
+required_artifacts = [".jankurai/repo-score.json", ".jankurai/repo-score.md"]
+timeout_seconds = 900
+requires_network = false
+destructive = false
+
+[[lane]]
+name = "audit"
+command = "bash scripts/ci-local.sh audit"
+purpose = "write .jankurai/repo-score.json and .jankurai/repo-score.md"
+command_id = "lane.audit"
+kind = "audit"
+cost = 5
+rules_covered = [
+  "HLT-001-DEAD-MARKER",
+  "HLT-003-OWNERLESS-PATH",
+  "HLT-004-UNMAPPED-PROOF",
+  "HLT-008-FALSE-GREEN-RISK",
+  "HLT-024-AGENT-TOOL-SUPPLY-GAP",
+]
+required_artifacts = [".jankurai/repo-score.json", ".jankurai/repo-score.md"]
+timeout_seconds = 900
+requires_network = false
+destructive = false
+
+[[lane]]
+name = "security"
+command = "bash scripts/ci-local.sh security"
+purpose = "secret scanning and dependency scanning of any committed manifests"
+command_id = "lane.security"
+kind = "security"
+cost = 10
+rules_covered = [
+  "HLT-009-GENERATED-SECURITY",
+  "HLT-010-SECRET-SPRAWL",
+  "HLT-011-PROMPT-INJECTION",
+  "HLT-012-OVERBROAD-AGENCY",
+  "HLT-016-SUPPLY-CHAIN-DRIFT",
+  "HLT-020-CI-HARDENING-GAP",
+  "HLT-024-AGENT-TOOL-SUPPLY-GAP",
+]
+required_artifacts = []
+timeout_seconds = 900
+requires_network = false
+destructive = false
