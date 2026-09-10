@@ -19,8 +19,8 @@ if [[ -d packages/ux-qa ]]; then npm exec -- playwright install --with-deps chro
 source_root="$(mktemp -d "$repo_root/target/ci-auditor.XXXXXX")"
 trap 'rm -rf "$source_root"' EXIT
 git clone --no-checkout https://github.com/neverhuman/jankurai-core.git "$source_root/core"
-git -C "$source_root/core" checkout --detach 43a03d15299f02cf55c615ab6220cfc139d4a3e7
-[[ "$(git -C "$source_root/core" rev-parse HEAD)" == 43a03d15299f02cf55c615ab6220cfc139d4a3e7 ]]
+git -C "$source_root/core" checkout --detach 0d509c617dd9ffb407705204f1a42b8e30313c50
+[[ "$(git -C "$source_root/core" rev-parse HEAD)" == 0d509c617dd9ffb407705204f1a42b8e30313c50 ]]
 cargo install --path "$source_root/core/crates/jankurai" --locked --root "$repo_root/target/ci-tools"
 # Preserve the upstream language adversarial checks as part of independent CI.
 (cd "$source_root/core" && cargo test -p jankurai --test language_bad_behavior --locked) \
