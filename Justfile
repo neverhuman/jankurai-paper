@@ -22,10 +22,11 @@ bootstrap: setup
 # recorder cache), then runs a changed-surface, target-only jankurai self-audit.
 fast:
     bash ops/ci/fast.sh
+    jankurai audit . --changed-fast --changed-from origin/main --no-score-history --json target/jankurai/fast-score.json --md target/jankurai/fast-score.md
 
 # Full self-audit writing the canonical repo-score artifacts.
 score:
-    bash ops/ci/audit.sh
+    jankurai audit . --mode standard --no-badge --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md --full
 
 # Generate an agent context pack: a token-bounded routing brief for the next
 # agent, derived from the owner/test maps and docs.
@@ -54,6 +55,7 @@ test:
 # Jankurai self-audit lane: writes the repo-score artifacts that CI uploads.
 # `repo-score` is the published artifact name consumed by the audit job.
 audit:
+    jankurai audit . --mode standard --no-badge --no-score-history --json .jankurai/repo-score.json --md .jankurai/repo-score.md --full
     bash ops/ci/audit.sh
 
 # Print the declared version.
