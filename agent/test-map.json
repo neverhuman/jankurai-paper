@@ -73,6 +73,14 @@
       "command": "bash scripts/ci-local.sh required",
       "purpose": "verify CI workflow entrypoints stay pinned and thin"
     },
+    "ops/ci/github-setup.sh": {
+      "command": "bash scripts/ci-local.sh security",
+      "purpose": "bind auditor pin changes to the fail-closed security lane"
+    },
+    "ops/ci/proof.sh": {
+      "command": "bash scripts/ci-local.sh security",
+      "purpose": "bind proofbind receipt routing changes to the security lane"
+    },
     "ops/": {
       "command": "bash scripts/ci-local.sh required",
       "purpose": "verify pinned CI script entrypoints"
